@@ -1,24 +1,40 @@
 package com.danghuuthinh.notificationlustre;
 
 import android.os.Bundle;
-
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.danghuuthinh.notificationlustre.Adapter.NotificationAdapter;
+import com.danghuuthinh.notificationlustre.models.NotificationItem;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    private RecyclerView notificationRecyclerView;
+    private NotificationAdapter adapter;
+    private List<NotificationItem> itemList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        setContentView(R.layout.activity_main); // đảm bảo activity_main.xml có RecyclerView đúng ID
+
+        notificationRecyclerView = findViewById(R.id.rvnotification);
+        notificationRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // Khởi tạo dữ liệu mẫu
+        itemList = new ArrayList<>();
+
+        itemList.add(new NotificationItem("TODAY")); // Section Header
+        itemList.add(new NotificationItem("Order Shipped", "Your order #1234 has been shipped.", "1h", R.mipmap.ic_shipped));
+        itemList.add(new NotificationItem("Payment Received", "We’ve received your payment.", "3h", R.mipmap.ic_payment));
+
+        itemList.add(new NotificationItem("YESTERDAY")); // Section Header
+        itemList.add(new NotificationItem("Promo Alert", "Flash sale is live now!", "20h", R.mipmap.ic_sales));
+
+        adapter = new NotificationAdapter(itemList);
+        notificationRecyclerView.setAdapter(adapter);
     }
 }
